@@ -6,8 +6,6 @@
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="Stark Super Island"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -25,7 +23,6 @@
             </intent-filter>
         </activity>
 
-        <!-- START OF STARK NOTIFICATION SERVICE -->
         <service 
             android:name=".service.NotificationListener"
             android:label="Stark Notification Service"
@@ -35,8 +32,6 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <!-- END OF STARK NOTIFICATION SERVICE -->
 
     </application>
-
 </manifest>
