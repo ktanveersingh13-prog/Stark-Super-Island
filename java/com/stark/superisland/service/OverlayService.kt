@@ -1,31 +1,25 @@
 package com.stark.superisland.service
 
-import android.annotation.SuppressLint
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.IBinder
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.view.animation.OvershootInterpolator
+import android.widget.TextView
 import com.stark.superisland.R
 
 class OverlayService : Service() {
-
     private lateinit var windowManager: WindowManager
     private lateinit var floatingView: View
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    @SuppressLint("InflateParams")
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        
-        // Stark Design: The Floating Window setup
+        floatingView = LayoutInflater.from(this).inflate(R.layout.stark_island_layout, null)
+
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -34,26 +28,24 @@ class OverlayService : Service() {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-            y = 20 // Distance from top
+            y = 50
         }
 
-        floatingView = LayoutInflater.from(this).inflate(R.layout.stark_island_layout, null)
-        
-        // Start the "Stark Entrance" Animation
-        floatingView.scaleX = 0f
-        floatingView.scaleY = 0f
-        floatingView.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .setDuration(500)
-            .setInterpolator(OvershootInterpolator())
-            .start()
-
         windowManager.addView(floatingView, params)
+        animateIsland()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (::floatingView.isInitialized) windowManager.removeView(floatingView)
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val title = intent?.getStringExtra("TITLE") ?: "Stark System"
+        floatingView.findViewById<TextView>(R.id.island_text).text = title
+        animateIsland()
+        return START_STICKY
+    }
+
+    private fun animateIsland() {
+        floatingView.scaleX = 0.5f
+        floatingView.animate().scaleX(1.1f).setDuration(300).setInterpolator(OvershootInterpolator()).withEndAction {
+            floatingView.animate().scaleX(1.0f).setDuration(100).start()
+        }.start()
     }
 }
