@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="40dp"
+    android:background="@drawable/stark_pill_shape"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:gravity="center">
+
+    <!-- Music Icon with Stark Glow -->
+    <ImageView
+        android:id="@+id/music_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@android:drawable/ic_lock_silent_mode_off"
+        android:contentDescription="Music Icon" />
+
+    <TextView
+        android:id="@+id/island_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STARK SYSTEM ACTIVE"
+        android:textColor="#00FFFF"
+        android:textSize="12sp"
+        android:layout_marginStart="8dp"
+        android:textStyle="bold" />
+
+</LinearLayout>
