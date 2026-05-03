@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.stark.superisland">
 
+    <!-- Permissions for High-Performance Features -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" 
+        tools:ignore="ProtectedPermissions" />
+    
+    <!-- Permission to keep service alive during gaming -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
-        android:allowBackup="true"
+        android:name=".StarkApp"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Stark Super Island"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
         android:theme="@style/Theme.StarkIsland"
-        tools:targetApi="31">
+        tools:targetApi="34">
 
+        <!-- Main Entrance Screen -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.StarkIsland">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,8 +34,9 @@
             </intent-filter>
         </activity>
 
+        <!-- Stark Radar: Notification Logic -->
         <service 
-            android:name=".service.NotificationListener"
+            android:name=".service.StarkNotificationService"
             android:label="Stark Radar"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
             android:exported="true">
@@ -35,10 +45,12 @@
             </intent-filter>
         </service>
 
+        <!-- Stark Body: The Floating UI -->
         <service 
-            android:name=".service.OverlayService" 
+            android:name=".service.StarkOverlayService" 
             android:enabled="true" 
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
 
     </application>
 </manifest>
