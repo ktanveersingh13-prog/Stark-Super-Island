@@ -5,19 +5,27 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
+import com.stark.superisland.core.SecurityProvider
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Request Floating Window Permission
+        checkStarkPermissions()
+        finish() 
+    }
+
+    private fun checkStarkPermissions() {
+        // 1. Check Display Over Other Apps (Overlay)
         if (!Settings.canDrawOverlays(this)) {
-            startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+            startActivity(intent)
         }
         
-        // Request Notification Access
-        startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
-        
-        finish()
+        // 2. Check Notification Access (Radar)
+        val listeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
+        if (listeners == null || !listeners.contains(packageName)) {
+            startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
+        }
     }
 }
