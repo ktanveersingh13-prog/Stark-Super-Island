@@ -1,19 +1,20 @@
-package com.stark.superisland.service
+package com.stark.superisland.core
 
-import android.content.Intent
-import android.service.notification.NotificationListenerService
-import android.service.notification.StatusBarNotification
+import android.content.Context
+import android.media.MediaMetadata
+import android.media.session.MediaController
+import android.media.session.MediaSessionManager
+import android.media.session.PlaybackState
 
-class NotificationListener : NotificationListenerService() {
-    override fun onNotificationPosted(sbn: StatusBarNotification) {
-        val title = sbn.notification.extras.getString("android.title") ?: ""
-        val text = sbn.notification.extras.getString("android.text") ?: ""
-        
-        // Send data to the Floating Island
-        val intent = Intent(this, OverlayService::class.java).apply {
-            putExtra("TITLE", title)
-            putExtra("TEXT", text)
-        }
-        startService(intent)
+class MediaManager(context: Context) {
+    private val sessionManager = context.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+
+    fun getActiveSession(): MediaController? {
+        val controllers = sessionManager.getActiveSessions(null)
+        return controllers.firstOrNull()
+    }
+
+    fun isPlaying(controller: MediaController?): Boolean {
+        return controller?.playbackState?.state == PlaybackState.STATE_PLAYING
     }
 }
