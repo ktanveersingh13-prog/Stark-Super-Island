@@ -5,20 +5,24 @@ import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.IBinder
 import android.view.*
-import android.view.animation.OvershootInterpolator
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.stark.superisland.R
+import com.stark.superisland.core.AnimationUtils
 
-class OverlayService : Service() {
+class StarkOverlayService : Service() {
     private lateinit var windowManager: WindowManager
-    private lateinit var floatingView: View
+    private lateinit var starkBaseView: View
+    private var isIslandExpanded = false
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        floatingView = LayoutInflater.from(this).inflate(R.layout.stark_island_layout, null)
+        
+        // Inflate the professional Base Container
+        starkBaseView = LayoutInflater.from(this).inflate(R.layout.stark_island_base, null)
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -28,24 +32,30 @@ class OverlayService : Service() {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-            y = 50
+            y = 25 // Stark style position
         }
 
-        windowManager.addView(floatingView, params)
-        animateIsland()
+        windowManager.addView(starkBaseView, params)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val title = intent?.getStringExtra("TITLE") ?: "Stark System"
-        floatingView.findViewById<TextView>(R.id.island_text).text = title
-        animateIsland()
+        val title = intent?.getStringExtra("STARK_TITLE") ?: "System Active"
+        updateStarkContent(title)
         return START_STICKY
     }
 
-    private fun animateIsland() {
-        floatingView.scaleX = 0.5f
-        floatingView.animate().scaleX(1.1f).setDuration(300).setInterpolator(OvershootInterpolator()).withEndAction {
-            floatingView.animate().scaleX(1.0f).setDuration(100).start()
-        }.start()
+    private fun updateStarkContent(title: String) {
+        val textView = starkBaseView.findViewById<TextView>(R.id.stark_music_title)
+        val progressBar = starkBaseView.findViewById<ProgressBar>(R.id.stark_music_progress)
+        
+        textView?.text = title
+        
+        // Trigger professional physics-based animation
+        AnimationUtils.popIn(starkBaseView)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::starkBaseView.isInitialized) windowManager.removeView(starkBaseView)
     }
 }
