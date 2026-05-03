@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.stark.superisland'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.stark.superisland"
+        minSdk 26 // Support for high-performance notification channels
+        targetSdk 34
+        versionCode 1
+        versionName "1.0-STARK-PRO"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true // SECURITY: Shrinks and hides code from hackers
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    buildFeatures {
+        viewBinding true // Prevents memory leaks
+    }
+}
+
+dependencies {
+    // High-performance UI components
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    
+    // Security and Performance
+    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+    implementation "androidx.dynamicanimation:dynamicanimation-ktx:1.0.0-alpha03" // Real-time Physics
+}
